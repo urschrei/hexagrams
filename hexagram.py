@@ -34,19 +34,19 @@ class Hexagram(object):
         )
     
     def trim(self, raw_hexagram):
-        """ remove trailing white bar from a hexagram / trigram """
+        """ remove trailing white bar from bottom of hexagram / trigram """
         raw_hexagram[-1] = raw_hexagram[-1][0:self.bar_height]
         return raw_hexagram
 
     def generate(self, pattern):
         """ generate a scaled b&w hexagram """
         container = []
+        # hexagrams are grown bottom to top
         for digit in self.pattern:
             if digit:
-                container.append(self._black_row())
+                container.insert(0, self._black_row())
             else:
-                container.append(self._broken_row())
-        # remove last white row
+                container.insert(0, self._broken_row())
         container = self.trim(container)
         stacked = np.vstack(container)
         # rescale to 256 x 8-bit    
