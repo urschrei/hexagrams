@@ -55,7 +55,10 @@ class Hexagram(object):
     def dump(self, filename="hexagram"):
         """ write hexagram to PNG """
         im = Image.fromarray(self.generated)
-        path = os.path.join('hexagram_output', filename + ".png")
+        outdir = 'hexagram_output'
+        if not os.path.exists(outdir):
+            os.makedirs(outdir)
+        path = os.path.join(outdir, filename + ".png")
         im.save(path)
         
     def __init__(self, pattern):
