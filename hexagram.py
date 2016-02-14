@@ -26,12 +26,12 @@ class Hexagram(object):
     def _broken_row(self):
         """ a broken bar """
         return np.vstack([
-                    np.hstack([
-                    np.zeros((self.bar_height, (self.bar_width / 2) - self.bar_height)),
-                    np.ones((self.bar_height, self.bar_height * 2)),
-                    np.zeros((self.bar_height, (self.bar_width / 2) - self.bar_height))]),
-                    np.ones((self.bar_height, self.bar_width))]
-            )
+            np.hstack([
+                np.zeros((self.bar_height, (self.bar_width / 2) - self.bar_height)),
+                np.ones((self.bar_height, self.bar_height * 2)),
+                np.zeros((self.bar_height, (self.bar_width / 2) - self.bar_height))]),
+            np.ones((self.bar_height, self.bar_width))]
+        )
     
     def trim(self, raw_hexagram):
         """ remove trailing white bar from a hexagram / trigram """
