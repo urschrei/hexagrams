@@ -1,9 +1,10 @@
- # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 # Requires PIL (pillow) and NumPy
 # Copyright (C) Stephan Hügel, 2016
 # License: MIT
 
+import os
 from PIL import Image
 import numpy as np
 
@@ -31,6 +32,11 @@ class Hexagram(object):
                     np.zeros((self.bar_height, (self.bar_width / 2) - self.bar_height))]),
                     np.ones((self.bar_height, self.bar_width))]
             )
+    
+    def trim(self, raw_hexagram):
+        """ remove trailing white bar from a hexagram / trigram """
+        raw_hexagram[-1] = raw_hexagram[-1][0:self.bar_height]
+        return raw_hexagram
 
     def generate(self, pattern):
         """ generate a scaled b&w hexagram """
@@ -41,15 +47,16 @@ class Hexagram(object):
             else:
                 container.append(self._broken_row())
         # remove last white row
-        container[-1] = container[-1][0:self.bar_height]
+        container = self.trim(container)
         stacked = np.vstack(container)
         # rescale to 256 x 8-bit    
         return (255.0 / stacked.max() * (stacked - stacked.min())).astype(np.uint8)
     
-    def dump(self):
+    def dump(self, filename="hexagram"):
         """ write hexagram to PNG """
         im = Image.fromarray(self.generated)
-        im.save('hexagram.png')
+        path = os.path.join('hexagram_output', filename + ".png")
+        im.save(path)
         
     def __init__(self, pattern):
         self.bar_height = 8
