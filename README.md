@@ -27,4 +27,4 @@ Can be found [here](hexagrams.py).
 [MIT](LICENSE)
 
 # Why
-[The Lottery in Babylon] is a very good story. You should [read](http://web.itu.edu.tr/~inceogl4/modernism/lotteryofbabylon.pdf) it.
+[The Lottery in Babylon](https://en.wikipedia.org/wiki/The_Lottery_in_Babylon) is a very good story. You should [read](http://web.itu.edu.tr/~inceogl4/modernism/lotteryofbabylon.pdf) it.
