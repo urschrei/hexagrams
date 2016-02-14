@@ -4,6 +4,8 @@
 Procedural generation of I Ching hexagrams using PIL and NumPy
 
 # Usage
+First, install [`requirements`](requirements.txt) (PIL and NumPy).  
+
 The bars are encoded as binary numbers, from top to bottom.  
 `1` encodes a solid bar, `0` encodes a broken bar.  
 
