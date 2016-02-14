@@ -1,7 +1,7 @@
 [![Tui](Tui.png)]( "The Joyous, Lake")
 
 # Description
-Procedural generation of I Ching hexagrams using PIL and NumPy
+Procedural generation of I Ching hexagrams using PIL and NumPy.
 
 # Usage
 First, install [`requirements`](requirements.txt) (PIL and NumPy).  
@@ -19,6 +19,9 @@ for k, v in hexagrams.items():
     h = Hexagram(v)
     h.dump(k)
 ```
+
+# The Hexagrams
+Can be found [here](hexagrams.py).
 
 # License
 [MIT](LICENSE)
