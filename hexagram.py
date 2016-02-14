@@ -62,7 +62,14 @@ class Hexagram(object):
         im.save(path)
         
     def __init__(self, pattern):
+        if len(pattern) != 6:
+            raise HexagramException("Pqass an iterable of six digits or booleans")
         self.bar_height = 8
         self.bar_width = 100
         self.pattern = pattern
         self.generated = self.generate(pattern)
+
+
+class HexagramException(Exception):
+    """ tfw your hexagram can't be constructed bc it's too short """
+    pass
