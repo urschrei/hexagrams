@@ -17,7 +17,7 @@ class Hexagram(object):
     1 / True is a solid line,
     0 / False is a broken line
     Write to hexagram_output\hexagram.png by calling .dump(),
-    with an optional filename string
+    with an optional filename string argument
     
     """   
     def __init__(self, pattern):
