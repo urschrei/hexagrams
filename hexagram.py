@@ -5,6 +5,8 @@
 # License: MIT
 
 import os
+import json
+import codecs
 from PIL import Image
 import numpy as np
 
@@ -29,6 +31,11 @@ class Hexagram(object):
         self.bar_width = (self.bar_height * 6) + (self.wbar_height * 5)
         self.pattern = pattern
         self.generated = self.generate(pattern)
+        self.json = json.dumps(
+            self.generated.tolist(),
+            indent=4,
+            separators=(',', ':'),
+            sort_keys=True)
     
     def _black_row(self):
         """ an unbroken bar """
@@ -63,7 +70,7 @@ class Hexagram(object):
                 container.insert(0, self._broken_row())
         container = self.trim(container)
         stacked = np.vstack(container)
-        # rescale to 256 x 8-bit    
+        # rescale to 256 x 8-bit (0 = black, 255 = white)
         return (255.0 / stacked.max() * (stacked - stacked.min())).astype(np.uint8)
     
     def dump(self, filename="hexagram"):
@@ -74,6 +81,14 @@ class Hexagram(object):
             os.makedirs(outdir)
         path = os.path.join(outdir, filename + ".png")
         im.save(path)
+
+    def dump_json(self, fname="hexagram"):
+        """ tries to dump JSON representation to a file """
+        try:
+            with codecs.open("%s%s" % (fname, ".json"), 'w', encoding="utf-8") as f:
+                f.write(self.json)
+        except IOError:
+            raise("Couldn't write file! You could also copy the .json property to your clipboard.")
 
 
 
