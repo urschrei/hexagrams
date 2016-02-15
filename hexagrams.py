@@ -42,7 +42,7 @@ hexagrams = {
     "Sung": trigrams["K'an"] + trigrams["Ch'ien"],
     "Hsü": trigrams["Ch'ien"] + trigrams["K'an"],
     "K'an": trigrams["K'an"] + trigrams["K'an"],
-    "Tun": trigrams["K'en"] + trigrams["Ch'ien"],
+    "Tun": trigrams["Kên"] + trigrams["Ch'ien"],
     "Ta Chuang": trigrams["Ch'ien"] + trigrams["Chên"],
     "Chin": [0, 0, 0, 1, 0, 1],
     "Ming I": [1, 0, 1, 0, 0, 0],
