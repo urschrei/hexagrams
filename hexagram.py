@@ -13,8 +13,11 @@ import numpy as np
 class Hexagram(object):
     """
     Generate and write a hexagram to PNG
-    Input is an iterable of six binary digits; 1 is a solid line, 0 a broken line
-    Write to hexagram.png by calling .dump()
+    Input is an iterable of six binary digits or booleans;
+    1 / True is a solid line,
+    0 / False is a broken line
+    Write to hexagram_output\hexagram.png by calling .dump(),
+    with an optional filename string
     
     """   
     def __init__(self, pattern):
