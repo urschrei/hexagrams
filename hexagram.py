@@ -75,9 +75,9 @@ class Hexagram(object):
     
     def dump(self, fname=False):
         """ write hexagram to PNG """
-        _fname = (fname or self.__class__.__name__)
+        _fname = (fname or self.__class__.__name__.lower())
         im = Image.fromarray(self.generated)
-        outdir = 'hexagram_output'
+        outdir = '%s%s' % (self.__class__.__name__.lower(), '_output')
         if not os.path.exists(outdir):
             os.makedirs(outdir)
         path = os.path.join(outdir, "%s%s" % (_fname, ".png"))
@@ -85,7 +85,7 @@ class Hexagram(object):
 
     def dump_json(self, fname=False):
         """ tries to dump JSON representation to a file """
-        _fname = (fname or self.__class__.__name__)
+        _fname = (fname or self.__class__.__name__.lower())
         try:
             with codecs.open("%s%s" % (_fname, ".json"), 'w', encoding="utf-8") as f:
                 f.write(self.json)
