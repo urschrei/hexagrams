@@ -12,7 +12,7 @@ trigrams = {
 }
 
 hexagrams = {
-    "Ta Yu": [1, 1, 1, 1, 0, 1],
+    "Ta Yu": trigrams.get("Ch'ien") + trigrams.get("Li"),
     "Ku": [0, 1, 1, 0, 0, 1],
     "I (Corner of the Mouth": [1, 0, 0, 0, 0, 1],
     "Ta Ch'u": [1, 1, 1, 0, 0, 1],
