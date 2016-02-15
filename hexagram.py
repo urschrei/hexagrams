@@ -8,13 +8,22 @@ import os
 from PIL import Image
 import numpy as np
 
+
+
 class Hexagram(object):
     """
     Generate and write a hexagram to PNG
     Input is an iterable of six binary digits; 1 is a solid line, 0 a broken line
     Write to hexagram.png by calling .dump()
     
-    """
+    """   
+    def __init__(self, pattern):
+        if len(pattern) != 6:
+            raise HexagramException("Pass an iterable of six digits or booleans")
+        self.bar_height = 8
+        self.bar_width = 100
+        self.pattern = pattern
+        self.generated = self.generate(pattern)
     
     def _black_row(self):
         """ an unbroken bar """
@@ -42,8 +51,8 @@ class Hexagram(object):
         """ generate a scaled b&w hexagram """
         container = []
         # hexagrams are grown bottom to top
-        for digit in self.pattern:
-            if digit:
+        for row in self.pattern:
+            if row:
                 container.insert(0, self._black_row())
             else:
                 container.insert(0, self._broken_row())
@@ -60,14 +69,7 @@ class Hexagram(object):
             os.makedirs(outdir)
         path = os.path.join(outdir, filename + ".png")
         im.save(path)
-        
-    def __init__(self, pattern):
-        if len(pattern) != 6:
-            raise HexagramException("Pqass an iterable of six digits or booleans")
-        self.bar_height = 8
-        self.bar_width = 100
-        self.pattern = pattern
-        self.generated = self.generate(pattern)
+
 
 
 class HexagramException(Exception):
