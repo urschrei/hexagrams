@@ -24,7 +24,9 @@ class Hexagram(object):
         if len(pattern) != 6:
             raise HexagramException("Pass an iterable of six digits or booleans")
         self.bar_height = 8
-        self.bar_width = 100
+        self.wbar_height = 6
+        # we always want to produce a square hexagram
+        self.bar_width = (self.bar_height * 6) + (self.wbar_height * 5)
         self.pattern = pattern
         self.generated = self.generate(pattern)
     
@@ -32,7 +34,7 @@ class Hexagram(object):
         """ an unbroken bar """
         return np.vstack([
             np.zeros((self.bar_height, self.bar_width)),
-            np.ones((self.bar_height, self.bar_width))]
+            np.ones((self.wbar_height, self.bar_width))]
         )
     
     def _broken_row(self):
@@ -42,7 +44,7 @@ class Hexagram(object):
                 np.zeros((self.bar_height, (self.bar_width / 2) - self.bar_height)),
                 np.ones((self.bar_height, self.bar_height * 2)),
                 np.zeros((self.bar_height, (self.bar_width / 2) - self.bar_height))]),
-            np.ones((self.bar_height, self.bar_width))]
+            np.ones((self.wbar_height, self.bar_width))]
         )
     
     def trim(self, raw_hexagram):
