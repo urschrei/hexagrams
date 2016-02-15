@@ -1,4 +1,6 @@
-[![Tui](Tui.png)]( "The Joyous, Lake")
+[![Tui](Tui_tri.png)]( "The Joyous, Lake") [![Tui](Tui_tri.png)]( "The Joyous, Lake")  
+
+[![Tui](Tui_hex.png)]( "The Joyous, Lake")
 
 # Description
 Procedural generation of I Ching hexagrams using PIL and NumPy.
