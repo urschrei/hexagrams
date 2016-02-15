@@ -22,9 +22,9 @@ class Hexagram(object):
     with an optional filename string argument
     
     """   
-    def __init__(self, pattern):
-        if len(pattern) != 6:
-            raise HexagramException("Pass an iterable of six digits or booleans")
+    def __init__(self, pattern, plength=6):
+        if len(pattern) != plength:
+            raise HexagramException("Pass an iterable of %s digits or booleans" % plength)
         self.bar_height = 8
         self.wbar_height = 6
         # we always want to produce a square hexagram
@@ -73,23 +73,30 @@ class Hexagram(object):
         # rescale to 256 x 8-bit (0 = black, 255 = white)
         return (255.0 / stacked.max() * (stacked - stacked.min())).astype(np.uint8)
     
-    def dump(self, filename="hexagram"):
+    def dump(self, fname=False):
         """ write hexagram to PNG """
+        _fname = (fname or self.__class__.__name__)
         im = Image.fromarray(self.generated)
         outdir = 'hexagram_output'
         if not os.path.exists(outdir):
             os.makedirs(outdir)
-        path = os.path.join(outdir, filename + ".png")
+        path = os.path.join(outdir, "%s%s" % (_fname, ".png"))
         im.save(path)
 
-    def dump_json(self, fname="hexagram"):
+    def dump_json(self, fname=False):
         """ tries to dump JSON representation to a file """
+        _fname = (fname or self.__class__.__name__)
         try:
-            with codecs.open("%s%s" % (fname, ".json"), 'w', encoding="utf-8") as f:
+            with codecs.open("%s%s" % (_fname, ".json"), 'w', encoding="utf-8") as f:
                 f.write(self.json)
         except IOError:
             raise("Couldn't write file! You could also copy the .json property to your clipboard.")
 
+
+class Trigram(Hexagram):
+    """ Same as hexagram, but with three bars """
+    def __init__(self, pattern):
+        super(self.__class__, self).__init__(pattern, plength=3)
 
 
 class HexagramException(Exception):
