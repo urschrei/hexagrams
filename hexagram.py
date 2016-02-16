@@ -26,7 +26,7 @@ class Hexagram(object):
         if len(pattern) != plength:
             raise HexagramException("Pass an iterable of %s digits or booleans" % plength)
         self.bar_height = 8
-        self.wbar_height = 6
+        self.wbar_height = 4
         # we always want to produce a square hexagram
         self.bar_width = (self.bar_height * 6) + (self.wbar_height * 5)
         self.pattern = pattern
@@ -90,7 +90,7 @@ class Hexagram(object):
             with codecs.open("%s%s" % (_fname, ".json"), 'w', encoding="utf-8") as f:
                 f.write(self.json)
         except IOError:
-            raise("Couldn't write file! You could also copy the .json property to your clipboard.")
+            raise WriteException("Couldn't write JSON! You could also copy the .json property to your clipboard.")
 
 
 class Trigram(Hexagram):
@@ -101,4 +101,9 @@ class Trigram(Hexagram):
 
 class HexagramException(Exception):
     """ tfw your hexagram can't be constructed bc it's too short """
+    pass
+
+
+class WriteException(Exception):
+    """ like an IOError """
     pass
