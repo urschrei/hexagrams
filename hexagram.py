@@ -29,7 +29,6 @@ class Hexagram(object):
         self.wbar_height = 4
         # we always want to produce a square hexagram
         self.bar_width = (self.bar_height * 6) + (self.wbar_height * 5)
-        self.pattern = pattern
         self.generated = self.generate(pattern)
         self.json = json.dumps(
             self.generated.tolist(),
@@ -63,7 +62,7 @@ class Hexagram(object):
         """ generate a scaled b&w hexagram """
         container = []
         # hexagrams are grown bottom to top
-        for row in self.pattern:
+        for row in pattern:
             if row:
                 container.insert(0, self._black_row())
             else:
@@ -90,7 +89,7 @@ class Hexagram(object):
             with codecs.open("%s%s" % (_fname, ".json"), 'w', encoding="utf-8") as f:
                 f.write(self.json)
         except IOError:
-            raise WriteException("Couldn't write JSON! You could also copy the .json property to your clipboard.")
+            raise WriteException("Couldn't write json! You could also copy the .json property to your clipboard.")
 
 
 class Trigram(Hexagram):
