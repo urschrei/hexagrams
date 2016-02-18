@@ -30,11 +30,6 @@ class Hexagram(object):
         # we always want to produce a square hexagram
         self.bar_width = (self.bar_height * 6) + (self.wbar_height * 5)
         self.generated = self.generate(pattern)
-        self.json = json.dumps(
-            self.generated.tolist(),
-            indent=4,
-            separators=(',', ':'),
-            sort_keys=True)
     
     def _black_row(self):
         """ an unbroken bar """
@@ -87,7 +82,13 @@ class Hexagram(object):
         _fname = (fname or self.__class__.__name__.lower())
         try:
             with codecs.open("%s%s" % (_fname, ".json"), 'w', encoding="utf-8") as f:
-                f.write(self.json)
+                f.write(
+                    json.dumps(
+                        self.generated.tolist(),
+                        indent=4,
+                        separators=(',', ':'),
+                        sort_keys=True)
+                )
         except IOError:
             raise WriteException("Couldn't write json! You could also copy the .json property to your clipboard.")
 
