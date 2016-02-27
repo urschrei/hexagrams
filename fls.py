@@ -10,6 +10,16 @@ def request_wants_json():
         request.accept_mimetypes[best] > \
         request.accept_mimetypes['text/html']
 
+@app.route('/')
+def index():
+    msg = {
+        "Hexagram": "/hexagram/nnnnnn.png, where n is 1 (solid bar) or 0 (broken bar). Hexagrams are built bottom to top.",
+        "Trigram": "/trigram/nnn.png, where n is 1 (solid bar) or 0 (broken bar). Trigrams are built bottom to top."
+    }
+    if request_wants_json():
+        return jsonify(items=[json.dumps(msg)])
+    return render_template('index.html'), 200
+
 @app.route('/hexagram/<hexagram>.png')
 def hex_out(hexagram):
     generated = Hexagram([int(elem) for elem in hexagram])
@@ -19,10 +29,6 @@ def hex_out(hexagram):
 def tri_out(trigram):
     generated = Trigram([int(elem) for elem in trigram])
     return send_file(generated.dump_image(), mimetype='image/png')
-
-@app.route('/')
-def index():
-    return render_template('index.html'), 200
 
 @app.errorhandler(404)
 def page_not_found(error):
