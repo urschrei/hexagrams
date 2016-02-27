@@ -32,17 +32,17 @@ def page_not_found(error):
     }
     if request_wants_json():
         return jsonify(items=[json.dumps(error)])
-    return render_template('404.html'), 404
+    return render_template('index.html'), 404
 
 @app.errorhandler(500)
 def app_error(error):
     error = {
-        "Hexagram: /hexagram/nnnnnn.png, where n is 1 (solid bar) or 0 (broken bar). Hexagrams are built bottom to top.",
-        "Trigram: /trigram/nnn.png, where n is 1 (solid bar) or 0 (broken bar). Trigrams are built bottom to top."
+        "Hexagram": "/hexagram/nnnnnn.png, where n is 1 (solid bar) or 0 (broken bar). Hexagrams are built bottom to top.",
+        "Trigram": "/trigram/nnn.png, where n is 1 (solid bar) or 0 (broken bar). Trigrams are built bottom to top."
     }
     if request_wants_json():
         return jsonify(items=[json.dumps(error)])
-    return render_template('500.html'), 500
+    return render_template('index.html'), 500
 
 if __name__ == '__main__':
     app.run()
