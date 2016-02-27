@@ -7,7 +7,7 @@
 import os
 import json
 import codecs
-from PIL import Image, ImageDraw
+from PIL import Image
 import StringIO
 import numpy as np
 
