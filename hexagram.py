@@ -7,9 +7,9 @@
 import os
 import json
 import codecs
-from PIL import Image
+from PIL import Image, ImageDraw
+import StringIO
 import numpy as np
-
 
 
 class Hexagram(object):
@@ -92,6 +92,13 @@ class Hexagram(object):
         except IOError:
             raise WriteException("Couldn't write json! You could also copy the .json property to your clipboard.")
 
+    def dump_image(self):
+        """ returns a hexagram as an in-memory file object """
+        img_io = StringIO.StringIO()
+        image = Image.fromarray(self.generated)
+        image.save(img_io, 'PNG', quality=100)
+        img_io.seek(0)
+        return img_io
 
 class Trigram(Hexagram):
     """ Same as hexagram, but with three bars """
