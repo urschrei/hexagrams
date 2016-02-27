@@ -1,2 +1,5 @@
 pillow
 numpy
+flask
+gunicorn
+
