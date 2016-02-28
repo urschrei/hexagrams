@@ -1,3 +1,4 @@
+import pdb
 from flask import Flask, send_file, request, render_template, jsonify, make_response, url_for
 import json
 from functools import wraps
@@ -5,16 +6,6 @@ from hexagram import Hexagram, Trigram
 app = Flask(__name__)
 with app.app_context():
     app.config["SERVER_NAME"] = "cleromancer.herokuapp.com"
-
-@app.route('/hexagram/<hexagram>.png')
-def hex_out(hexagram):
-    generated = Hexagram([int(elem) for elem in hexagram])
-    return send_file(generated.dump_image(), mimetype='image/png')
-
-@app.route('/trigram/<trigram>.png')
-def tri_out(trigram):
-    generated = Trigram([int(elem) for elem in trigram])
-    return send_file(generated.dump_image(), mimetype='image/png')
 
 def add_response_headers(headers={}):
     """This decorator adds the headers passed in to the response"""
@@ -29,6 +20,39 @@ def add_response_headers(headers={}):
         return decorated_function
     return decorator
 
+def link_next():
+    ep = request.endpoint
+    num = request.view_args.get('hexagram')
+    # reverse input, and convert to int
+    rev = int(num[::-1], 2)
+    if rev >= 63:
+        result = '000000'
+    else:
+        rev += 1
+        # reverse again, and pad
+        result = bin(rev)[2:].zfill(6)[::-1]
+    return result
+    with app.app_context():
+        return {"Link": '<%s>; rel="next"' % url_for(
+            ep,
+            hexagram=result,
+            _external=True)
+        }
+
+@app.route('/hexagram/<hexagram>.png')
+def hex_out(hexagram):
+    generated = Hexagram([int(elem) for elem in hexagram])
+    response = make_response(send_file(generated.dump_image(), mimetype='image/png'))
+    response.headers = link_next()
+    pdb.set_trace()
+    # return send_file(generated.dump_image(), mimetype='image/png')
+    return response
+
+@app.route('/trigram/<trigram>.png')
+def tri_out(trigram):
+    generated = Trigram([int(elem) for elem in trigram])
+    return send_file(generated.dump_image(), mimetype='image/png')
+
 def request_wants_json():
     best = request.accept_mimetypes \
         .best_match(['application/json', 'text/html'])
@@ -36,17 +60,18 @@ def request_wants_json():
         request.accept_mimetypes[best] > \
         request.accept_mimetypes['text/html']
 
-def build_url():
+def link_first():
     with app.app_context():
         return {"Link": '<%s>; rel="first"' % url_for(
-        'hex_out',
-        hexagram='000000',
-        _external=True)}
+            'hex_out',
+            hexagram='000000',
+            _external=True)
+        }
 
 def firstlink(f):
     """ Return the link to the simplest hexagram with a response """
     @wraps(f)
-    @add_response_headers(build_url())
+    @add_response_headers(link_first())
     def decorated_function(*args, **kwargs):
         return f(*args, **kwargs)
     return decorated_function
