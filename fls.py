@@ -20,6 +20,8 @@ def add_response_headers(headers={}):
     return decorator
 
 def link_next():
+    links = {}
+    kwargs = {}
     ep = request.endpoint
     num = request.view_args.get('hexagram')
     # reverse input, and convert to int
@@ -30,12 +32,17 @@ def link_next():
         rev += 1
         # reverse again, and pad
         result = bin(rev)[2:].zfill(6)[::-1]
+
+    if request.view_args.get('hexagram'):
+        kwargs['hexagram'] = result
+        kwargs['_external'] = True
+    else:
+        kwargs['trigram'] = result
+        kwargs['_external'] = True
+
     with app.app_context():
-        return {"Link": '<%s>; rel="next"' % url_for(
-            ep,
-            hexagram=result,
-            _external=True)
-        }
+        links["Link"] = '<%s>; rel="next"' % url_for(ep , **kwargs)
+    return links
 
 @app.route('/hexagram/<hexagram>.png')
 def hex_out(hexagram):
