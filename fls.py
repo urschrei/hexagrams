@@ -23,22 +23,29 @@ def link_next():
     links = {}
     kwargs = {}
     ep = request.endpoint
-    num = request.view_args.get('hexagram')
-    # reverse input, and convert to int
-    rev = int(num[::-1], 2)
-    if rev >= 63:
-        result = '000000'
-    else:
-        rev += 1
-        # reverse again, and pad
-        result = bin(rev)[2:].zfill(6)[::-1]
-
+    # if it's a hexagram call
     if request.view_args.get('hexagram'):
-        kwargs['hexagram'] = result
-        kwargs['_external'] = True
+        num = request.view_args.get('hexagram')
+        # reverse input, and convert to int
+        rev = int(num[::-1], 2)
+        if rev >= 63:
+            kwargs['hexagram'] = '000000'
+        else:
+            rev += 1
+            # reverse again, and pad
+            kwargs['hexagram'] = bin(rev)[2:].zfill(6)[::-1]
+    # must be a trigram call
     else:
-        kwargs['trigram'] = result
-        kwargs['_external'] = True
+        num = request.view_args.get('trigram')
+        # reverse input, and convert to int
+        rev = int(num[::-1], 2)
+        if rev >= 7:
+            kwargs['trigram'] = '000'
+        else:
+            rev += 1
+            # reverse again, and pad
+            kwargs['trigram'] = bin(rev)[2:].zfill(3)[::-1]
+    kwargs['_external'] = True
 
     with app.app_context():
         links["Link"] = '<%s>; rel="next"' % url_for(ep , **kwargs)
@@ -55,7 +62,10 @@ def hex_out(hexagram):
 @app.route('/trigram/<trigram>.png')
 def tri_out(trigram):
     generated = Trigram([int(elem) for elem in trigram])
-    return send_file(generated.dump_image(), mimetype='image/png')
+    response = make_response(send_file(generated.dump_image(), mimetype='image/png'))
+    for k, v in link_next().items():
+        response.headers[k] = v
+    return response
 
 def request_wants_json():
     best = request.accept_mimetypes \
