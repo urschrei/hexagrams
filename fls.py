@@ -1,4 +1,3 @@
-import pdb
 from flask import Flask, send_file, request, render_template, jsonify, make_response, url_for
 import json
 from functools import wraps
@@ -44,7 +43,6 @@ def hex_out(hexagram):
     generated = Hexagram([int(elem) for elem in hexagram])
     response = make_response(send_file(generated.dump_image(), mimetype='image/png'))
     response.headers = link_next()
-    pdb.set_trace()
     # return send_file(generated.dump_image(), mimetype='image/png')
     return response
 
