@@ -36,6 +36,24 @@ def add_response_headers(headers={}):
         return decorated_function
     return decorator
 
+def step_calculation(num, _max):
+    """ Calculate next hexagram or trigram binary representation
+    Overflows to smallest
+    """
+    if _max == 63:
+        first = '000000'
+    else:
+        first = '000'
+    # reverse input, and convert to int
+    rev = int(num[::-1], 2)
+    if rev >= max:
+        out = first
+    else:
+        rev += 1
+        # reverse again, and pad
+        out = bin(rev)[2:].zfill(6)[::-1]
+    return out
+
 def link_next():
     links = {}
     kwargs = {}
@@ -46,28 +64,14 @@ def link_next():
         last = '11111'
         kwargs['hexagram'] = 'dummy'
         num = request.view_args.get('hexagram')
-        # reverse input, and convert to int
-        rev = int(num[::-1], 2)
-        if rev >= 63:
-            _next = first
-        else:
-            rev += 1
-            # reverse again, and pad
-            _next = bin(rev)[2:].zfill(6)[::-1]
+        _next = step_calculation(num, 63)
     # must be a trigram call
     else:
         first = '000'
         last = '111'
         kwargs['trigram'] = 'dummy'
         num = request.view_args.get('trigram')
-        # reverse input, and convert to int
-        rev = int(num[::-1], 2)
-        if rev >= 7:
-            _next = first
-        else:
-            rev += 1
-            # reverse again, and pad
-            _next = bin(rev)[2:].zfill(3)[::-1]
+        _next = step_calculation(num, 7)
     # first, next, previous, last
     links["Link"] = '%s' % (
         link_dict(url_for, ep, first, last, _next, **kwargs),
