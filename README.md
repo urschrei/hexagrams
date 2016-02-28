@@ -3,6 +3,9 @@
 # Description
 Procedural generation of I Ching hexagrams using PIL and NumPy.
 
+# Hexagram as a Service (Haas)
+[Trigrams, too](http://cleromancer.herokuapp.com).
+
 # Usage
 First, install [`requirements`](requirements.txt) (PIL and NumPy).  
 
