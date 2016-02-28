@@ -42,7 +42,8 @@ def link_next():
 def hex_out(hexagram):
     generated = Hexagram([int(elem) for elem in hexagram])
     response = make_response(send_file(generated.dump_image(), mimetype='image/png'))
-    response.headers = link_next()
+    for k, v in link_next():
+        response.headers[k] = v
     # return send_file(generated.dump_image(), mimetype='image/png')
     return response
 
