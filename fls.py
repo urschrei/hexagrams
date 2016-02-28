@@ -1,7 +1,21 @@
-from flask import Flask, send_file, request, render_template, jsonify
+from flask import Flask, send_file, request, render_template, jsonify, make_response, url_for
 import json
-app = Flask(__name__)
+from functools import wraps
 from hexagram import Hexagram, Trigram
+app = Flask(__name__)
+
+def add_response_headers(headers={}):
+    """This decorator adds the headers passed in to the response"""
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            resp = make_response(f(*args, **kwargs))
+            h = resp.headers
+            for header, value in headers.items():
+                h[header] = value
+            return resp
+        return decorated_function
+    return decorator
 
 def request_wants_json():
     best = request.accept_mimetypes \
@@ -10,7 +24,20 @@ def request_wants_json():
         request.accept_mimetypes[best] > \
         request.accept_mimetypes['text/html']
 
+def firstlink(f):
+    """ Return the link to the simplest hexagram with a response """
+    @wraps(f)
+    @add_response_headers({"Link": '<%s>; rel="first"' % url_for(
+        "hex_out",
+        hexagram='000000',
+        _external=True)}
+    )
+    def decorated_function(*args, **kwargs):
+        return f(*args, **kwargs)
+    return decorated_function
+
 @app.route('/')
+@firstlink
 def index():
     msg = {
         "Hexagram": "/hexagram/nnnnnn.png, where n is 1 (solid bar) or 0 (broken bar). Hexagrams are built bottom to top.",
