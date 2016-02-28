@@ -1,6 +1,6 @@
-[![Tui](Tui_tri.png)]( "The Joyous, Lake") [![Tui](Tui_tri.png)]( "The Joyous, Lake")  
+[![Tui](http://cleromancer.herokuapp.com/trigram/100)]( "The Joyous, Lake") [![Tui](http://cleromancer.herokuapp.com/trigram/100)]( "The Joyous, Lake")  
 
-[![Tui](Tui_hex.png)]( "The Joyous, Lake")
+[![Tui](http://cleromancer.herokuapp.com/hexagram/100100)]( "The Joyous, Lake")
 
 # Description
 Procedural generation of I Ching hexagrams using PIL and NumPy.
