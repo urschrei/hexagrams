@@ -3,6 +3,18 @@ import json
 from functools import wraps
 from hexagram import Hexagram, Trigram
 app = Flask(__name__)
+with app.app_context():
+    app.config["SERVER_NAME"] = "cleromancer.herokuapp.com"
+
+@app.route('/hexagram/<hexagram>.png')
+def hex_out(hexagram):
+    generated = Hexagram([int(elem) for elem in hexagram])
+    return send_file(generated.dump_image(), mimetype='image/png')
+
+@app.route('/trigram/<trigram>.png')
+def tri_out(trigram):
+    generated = Trigram([int(elem) for elem in trigram])
+    return send_file(generated.dump_image(), mimetype='image/png')
 
 def add_response_headers(headers={}):
     """This decorator adds the headers passed in to the response"""
@@ -24,14 +36,17 @@ def request_wants_json():
         request.accept_mimetypes[best] > \
         request.accept_mimetypes['text/html']
 
+def build_url():
+    with app.app_context():
+        return {"Link": '<%s>; rel="first"' % url_for(
+        'hex_out',
+        hexagram='000000',
+        _external=True)}
+
 def firstlink(f):
     """ Return the link to the simplest hexagram with a response """
     @wraps(f)
-    @add_response_headers({"Link": '<%s>; rel="first"' % url_for(
-        "hex_out",
-        hexagram='000000',
-        _external=True)}
-    )
+    @add_response_headers(build_url())
     def decorated_function(*args, **kwargs):
         return f(*args, **kwargs)
     return decorated_function
@@ -46,16 +61,6 @@ def index():
     if request_wants_json():
         return jsonify(items=[json.dumps(msg)])
     return render_template('index.html'), 200
-
-@app.route('/hexagram/<hexagram>.png')
-def hex_out(hexagram):
-    generated = Hexagram([int(elem) for elem in hexagram])
-    return send_file(generated.dump_image(), mimetype='image/png')
-
-@app.route('/trigram/<trigram>.png')
-def tri_out(trigram):
-    generated = Trigram([int(elem) for elem in trigram])
-    return send_file(generated.dump_image(), mimetype='image/png')
 
 @app.errorhandler(404)
 def page_not_found(error):
