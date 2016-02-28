@@ -20,9 +20,8 @@ def add_response_headers(headers={}):
     return decorator
 
 def link_next():
-    with app.test_request_context("/hexagram/111000.png"):
-        ep = request.endpoint
-        num = request.view_args.get('hexagram')
+    ep = request.endpoint
+    num = request.view_args.get('hexagram')
     # reverse input, and convert to int
     rev = int(num[::-1], 2)
     if rev >= 63:
