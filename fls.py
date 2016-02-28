@@ -20,8 +20,9 @@ def add_response_headers(headers={}):
     return decorator
 
 def link_next():
-    ep = request.endpoint
-    num = request.view_args.get('hexagram')
+    with app.test_request_context("/hexagram/111000.png"):
+        ep = request.endpoint
+        num = request.view_args.get('hexagram')
     # reverse input, and convert to int
     rev = int(num[::-1], 2)
     if rev >= 63:
@@ -30,7 +31,6 @@ def link_next():
         rev += 1
         # reverse again, and pad
         result = bin(rev)[2:].zfill(6)[::-1]
-    return result
     with app.app_context():
         return {"Link": '<%s>; rel="next"' % url_for(
             ep,
@@ -42,9 +42,8 @@ def link_next():
 def hex_out(hexagram):
     generated = Hexagram([int(elem) for elem in hexagram])
     response = make_response(send_file(generated.dump_image(), mimetype='image/png'))
-    for k, v in link_next():
+    for k, v in link_next().items():
         response.headers[k] = v
-    # return send_file(generated.dump_image(), mimetype='image/png')
     return response
 
 @app.route('/trigram/<trigram>.png')
@@ -93,8 +92,9 @@ def page_not_found(error):
         "Trigram": "/trigram/nnn.png, where n is 1 (solid bar) or 0 (broken bar). Trigrams are built bottom to top."
     }
     if request_wants_json():
-        return jsonify(items=[json.dumps(error)])
-    return render_template('index.html'), 404
+        resp = make_response(jsonify(items=[json.dumps(error)]), 404)
+    resp = make_response(render_template('index.html'), 404)
+    return resp
 
 @app.errorhandler(500)
 def app_error(error):
