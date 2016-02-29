@@ -1,12 +1,17 @@
 from flask import Flask, send_file, request, render_template, jsonify, make_response, url_for
 import json
-from functools import wraps, partial
+from functools import wraps
 from hexagram import Hexagram, Trigram
 app = Flask(__name__)
 with app.app_context():
     app.config["SERVER_NAME"] = "cleromancer.herokuapp.com"
 
 def link_dict(func, ep, *args, **kwargs):
+    """ Build "Link" headers from a list of passed values
+    kwargs only contains one key: it's passed to the url builder func
+    we replace its value with the first, last, and next values, then build
+    the url, and append as string
+    """
     kwargs['_external'] = True
     ls = []
     with app.app_context():
@@ -16,7 +21,7 @@ def link_dict(func, ep, *args, **kwargs):
                 kwargs[k] = args[idx]
             url = func(ep, **kwargs)
             ls.append('<%s>; rel="%s"' % (url, arg))
-    return ','.join(ls)
+    return ', '.join(ls)
 
 def add_response_headers(headers={}):
     """This decorator adds the headers passed in to the response"""
