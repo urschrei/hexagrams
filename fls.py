@@ -7,7 +7,9 @@ with app.app_context():
     app.config["SERVER_NAME"] = "cleromancer.herokuapp.com"
 
 def link_dict(f, endpoint, shape, position):
-    return '<%s>; rel="%s"' % (f(endpoint, shape, _external=True), position)
+    with app.app_context():
+        url = f(endpoint, shape, _external=True)
+    return '<%s>; rel="%s"' % (url, position)
 
 def add_response_headers(headers={}):
     """This decorator adds the headers passed in to the response"""
@@ -53,14 +55,12 @@ def link_next():
             rev += 1
             # reverse again, and pad
             _next = bin(rev)[2:].zfill(3)[::-1]
-
-    with app.app_context():
-        # first, next, previous, last
-        links["Link"] = '%s, %s, %s,' % (
-            link_dict(url_for, ep, shape, first),
-            link_dict(url_for, ep, shape, last),
-            link_dict(url_for, ep, shape, _next),
-        )
+    # first, next, previous, last
+    links["Link"] = '%s, %s, %s,' % (
+        link_dict(url_for, ep, shape, first),
+        link_dict(url_for, ep, shape, last),
+        link_dict(url_for, ep, shape, _next),
+    )
     return links
 
 @app.route('/hexagram/<hexagram>.png')
