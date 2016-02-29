@@ -8,9 +8,10 @@ with app.app_context():
 
 def json_resp():
     return {
-        "Hexagram": "/hexagram/nnnnnn.png, where n is 1 (solid bar) or 0 (broken bar). Hexagrams are built bottom to top.",
-        "Trigram": "/trigram/nnn.png, where n is 1 (solid bar) or 0 (broken bar). Trigrams are built bottom to top.",
-        "Links": "See the Link header for full paths."
+        "hexagram": "/hexagram/nnnnnn.png, where n is 1 (solid bar) or 0 (broken bar). Hexagrams are built bottom to top.",
+        "trigram": "/trigram/nnn.png, where n is 1 (solid bar) or 0 (broken bar). Trigrams are built bottom to top.",
+        "digit_order": "Hexagrams and Trigrams are built using digits read from left to right.",
+        "links": "See the Link header for full paths."
     }
 
 def link_dict(func, ep, *args, **kwargs):

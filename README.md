@@ -9,7 +9,7 @@ Procedural generation of I Ching hexagrams using PIL and NumPy.
 # Usage
 First, install [`requirements`](requirements.txt) (PIL and NumPy).  
 
-A Hexagram is composed from two of the eight trigrams. Its bars are encoded as binary numbers, **from bottom to top**.  
+A Hexagram is composed from two of the eight trigrams. Its bars are encoded as binary numbers, **from bottom to top**, using the digits from left to right.  
 `1` encodes a solid bar, `0` encodes a broken bar.  
 Pass a 6-digit iterable of `1`/`0` or `True`/`False` to generate the hexagram.  
 
