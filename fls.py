@@ -6,6 +6,13 @@ app = Flask(__name__)
 with app.app_context():
     app.config["SERVER_NAME"] = "cleromancer.herokuapp.com"
 
+def json_resp():
+    return {
+        "Hexagram": "/hexagram/nnnnnn.png, where n is 1 (solid bar) or 0 (broken bar). Hexagrams are built bottom to top.",
+        "Trigram": "/trigram/nnn.png, where n is 1 (solid bar) or 0 (broken bar). Trigrams are built bottom to top.",
+        "Links": "See the Link header for full paths."
+    }
+
 def link_dict(func, ep, *args, **kwargs):
     """ Build "Link" headers from a list of passed values
     kwargs only contains one key: it's passed to the url builder func
@@ -24,7 +31,7 @@ def link_dict(func, ep, *args, **kwargs):
     return ', '.join(ls)
 
 def add_response_headers(headers={}):
-    """This decorator adds the headers passed in to the response"""
+    """ This decorator adds the headers passed in to the response"""
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
@@ -78,22 +85,6 @@ def link_next():
     )
     return links
 
-@app.route('/hexagram/<hexagram>.png')
-def hex_out(hexagram):
-    generated = Hexagram([int(elem) for elem in hexagram])
-    response = make_response(send_file(generated.dump_image(), mimetype='image/png'))
-    for k, v in link_next().items():
-        response.headers[k] = v
-    return response
-
-@app.route('/trigram/<trigram>.png')
-def tri_out(trigram):
-    generated = Trigram([int(elem) for elem in trigram])
-    response = make_response(send_file(generated.dump_image(), mimetype='image/png'))
-    for k, v in link_next().items():
-        response.headers[k] = v
-    return response
-
 def request_wants_json():
     best = request.accept_mimetypes \
         .best_match(['application/json', 'text/html'])
@@ -117,23 +108,32 @@ def firstlink(f):
         return f(*args, **kwargs)
     return decorated_function
 
+@app.route('/hexagram/<hexagram>.png')
+def hex_out(hexagram):
+    generated = Hexagram([int(elem) for elem in hexagram])
+    response = make_response(send_file(generated.dump_image(), mimetype='image/png'))
+    for k, v in link_next().items():
+        response.headers[k] = v
+    return response
+
+@app.route('/trigram/<trigram>.png')
+def tri_out(trigram):
+    generated = Trigram([int(elem) for elem in trigram])
+    response = make_response(send_file(generated.dump_image(), mimetype='image/png'))
+    for k, v in link_next().items():
+        response.headers[k] = v
+    return response
+
 @app.route('/')
 @firstlink
 def index():
-    msg = {
-        "Hexagram": "/hexagram/nnnnnn.png, where n is 1 (solid bar) or 0 (broken bar). Hexagrams are built bottom to top.",
-        "Trigram": "/trigram/nnn.png, where n is 1 (solid bar) or 0 (broken bar). Trigrams are built bottom to top."
-    }
+    msg  = json_resp()
     if request_wants_json():
         return jsonify(items=[json.dumps(msg)])
     return render_template('index.html'), 200
 
 @app.errorhandler(404)
 def page_not_found(error):
-    error = {
-        "Hexagram": "/hexagram/nnnnnn.png, where n is 1 (solid bar) or 0 (broken bar). Hexagrams are built bottom to top.",
-        "Trigram": "/trigram/nnn.png, where n is 1 (solid bar) or 0 (broken bar). Trigrams are built bottom to top."
-    }
     if request_wants_json():
         resp = make_response(jsonify(items=[json.dumps(error)]), 404)
     resp = make_response(render_template('index.html'), 404)
@@ -141,10 +141,6 @@ def page_not_found(error):
 
 @app.errorhandler(500)
 def app_error(error):
-    error = {
-        "Hexagram": "/hexagram/nnnnnn.png, where n is 1 (solid bar) or 0 (broken bar). Hexagrams are built bottom to top.",
-        "Trigram": "/trigram/nnn.png, where n is 1 (solid bar) or 0 (broken bar). Trigrams are built bottom to top."
-    }
     if request_wants_json():
         return jsonify(items=[json.dumps(error)]), 500
     return render_template('index.html'), 500
