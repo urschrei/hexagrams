@@ -6,6 +6,9 @@ app = Flask(__name__)
 with app.app_context():
     app.config["SERVER_NAME"] = "cleromancer.herokuapp.com"
 
+def link_dict(f, endpoint, shape, position):
+    return '<%s>; rel="%s"' % (f(endpoint, shape, _external=True), position)
+
 def add_response_headers(headers={}):
     """This decorator adds the headers passed in to the response"""
     def decorator(f):
@@ -21,34 +24,43 @@ def add_response_headers(headers={}):
 
 def link_next():
     links = {}
-    kwargs = {}
     ep = request.endpoint
     # if it's a hexagram call
     if request.view_args.get('hexagram'):
+        first = '000000'
+        last = '11111'
+        shape = 'hexagram'
         num = request.view_args.get('hexagram')
         # reverse input, and convert to int
         rev = int(num[::-1], 2)
         if rev >= 63:
-            kwargs['hexagram'] = '000000'
+            _next = first
         else:
             rev += 1
             # reverse again, and pad
-            kwargs['hexagram'] = bin(rev)[2:].zfill(6)[::-1]
+            _next = bin(rev)[2:].zfill(6)[::-1]
     # must be a trigram call
     else:
+        first = '000'
+        last = '111'
+        shape = 'trigram'
         num = request.view_args.get('trigram')
         # reverse input, and convert to int
         rev = int(num[::-1], 2)
         if rev >= 7:
-            kwargs['trigram'] = '000'
+            _next = first
         else:
             rev += 1
             # reverse again, and pad
-            kwargs['trigram'] = bin(rev)[2:].zfill(3)[::-1]
-    kwargs['_external'] = True
+            _next = bin(rev)[2:].zfill(3)[::-1]
 
     with app.app_context():
-        links["Link"] = '<%s>; rel="next"' % url_for(ep , **kwargs)
+        # first, next, previous, last
+        links["Link"] = '%s, %s, %s,' % (
+            link_dict(url_for, ep, shape, first),
+            link_dict(url_for, ep, shape, last),
+            link_dict(url_for, ep, shape, _next),
+        )
     return links
 
 @app.route('/hexagram/<hexagram>.png')
@@ -119,7 +131,7 @@ def app_error(error):
         "Trigram": "/trigram/nnn.png, where n is 1 (solid bar) or 0 (broken bar). Trigrams are built bottom to top."
     }
     if request_wants_json():
-        return jsonify(items=[json.dumps(error)])
+        return jsonify(items=[json.dumps(error)]), 500
     return render_template('index.html'), 500
 
 if __name__ == '__main__':
