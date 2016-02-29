@@ -7,6 +7,7 @@ with app.app_context():
     app.config["SERVER_NAME"] = "cleromancer.herokuapp.com"
 
 def link_dict(func, ep, *args, **kwargs):
+    kwargs['_external'] = True
     ls = []
     with app.app_context():
         for idx, arg in enumerate(['first', 'last', 'next']):
