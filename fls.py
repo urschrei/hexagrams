@@ -1,15 +1,21 @@
 from flask import Flask, send_file, request, render_template, jsonify, make_response, url_for
 import json
-from functools import wraps
+from functools import wraps, partial
 from hexagram import Hexagram, Trigram
 app = Flask(__name__)
 with app.app_context():
     app.config["SERVER_NAME"] = "cleromancer.herokuapp.com"
 
-def link_dict(f, endpoint, shape, position):
+def link_dict(func, ep, *args, **kwargs):
+    ls = []
     with app.app_context():
-        url = f(endpoint, shape, _external=True)
-    return '<%s>; rel="%s"' % (url, position)
+        for idx, arg in enumerate(['first', 'last', 'next']):
+            # kwargs only contains a single item, so this is horrible
+            for k, v in kwargs.items():
+                kwargs[k] = args[idx]
+            url = func(ep, **kwargs)
+            ls.append('<%s>; rel="%s"' % (url, arg))
+    return ','.join(ls)
 
 def add_response_headers(headers={}):
     """This decorator adds the headers passed in to the response"""
@@ -26,12 +32,13 @@ def add_response_headers(headers={}):
 
 def link_next():
     links = {}
+    kwargs = {}
     ep = request.endpoint
     # if it's a hexagram call
     if request.view_args.get('hexagram'):
         first = '000000'
         last = '11111'
-        shape = 'hexagram'
+        kwargs['hexagram'] = 'dummy'
         num = request.view_args.get('hexagram')
         # reverse input, and convert to int
         rev = int(num[::-1], 2)
@@ -45,7 +52,7 @@ def link_next():
     else:
         first = '000'
         last = '111'
-        shape = 'trigram'
+        kwargs['trigram'] = 'dummy'
         num = request.view_args.get('trigram')
         # reverse input, and convert to int
         rev = int(num[::-1], 2)
@@ -56,10 +63,8 @@ def link_next():
             # reverse again, and pad
             _next = bin(rev)[2:].zfill(3)[::-1]
     # first, next, previous, last
-    links["Link"] = '%s, %s, %s,' % (
-        link_dict(url_for, ep, shape, first),
-        link_dict(url_for, ep, shape, last),
-        link_dict(url_for, ep, shape, _next),
+    links["Link"] = '%s' % (
+        link_dict(url_for, ep, first, last, _next, **kwargs),
     )
     return links
 
