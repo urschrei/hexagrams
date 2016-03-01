@@ -20,16 +20,18 @@ def link_dict(func, ep, *args, **kwargs):
     we replace its value with the first, last, and next values, then build
     the url, and append as string
     """
-    kwargs['_external'] = True
-    ls = []
+    links = []
     with app.app_context():
         for idx, arg in enumerate(['first', 'last', 'next']):
-            # kwargs only contains a single item, so this is horrible
-            for k, v in kwargs.items():
+            # kwargs only contains a single key (hexagram or trigram)
+            # its value is replaced by the first, next, and last digit sequences
+            # args contains values for first, last next
+            for k in kwargs.keys():
                 kwargs[k] = args[idx]
+            kwargs['_external'] = True
             url = func(ep, **kwargs)
-            ls.append('<%s>; rel="%s"' % (url, arg))
-    return ', '.join(ls)
+            links.append('<%s>; rel="%s"' % (url, arg))
+    return ', '.join(links)
 
 def add_response_headers(headers={}):
     """ This decorator adds the headers passed in to the response"""
