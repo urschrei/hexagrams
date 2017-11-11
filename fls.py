@@ -69,7 +69,6 @@ def step_calculation(num, _max):
 def link_next():
     links = {}
     kwargs = {}
-    ep = request.endpoint
     # if it's a hexagram call
     if request.view_args.get('hexagram'):
         first = '000000'
@@ -86,7 +85,7 @@ def link_next():
         _next = step_calculation(num, 7)
     # first, next, previous, last
     links["Link"] = '%s' % (
-        link_dict(url_for, ep, first, last, _next, **kwargs),
+        link_dict(url_for, request.endpoint, first, last, _next, **kwargs),
     )
     return links
 
