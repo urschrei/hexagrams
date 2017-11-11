@@ -139,14 +139,13 @@ def index():
 @app.errorhandler(404)
 def page_not_found(error):
     if request_wants_json():
-        resp = make_response(jsonify(items=[json.dumps(error)]), 404)
-    resp = make_response(render_template('index.html'), 404)
-    return resp
+        return  make_response(jsonify(items=["Not Found"]), 404)
+    return make_response(render_template('index.html'), 404)
 
 @app.errorhandler(500)
 def app_error(error):
     if request_wants_json():
-        return jsonify(items=[json.dumps(error)]), 500
+        return jsonify(items=["Internal Server Error"]), 500
     return render_template('index.html'), 500
 
 if __name__ == '__main__':
