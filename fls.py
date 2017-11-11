@@ -52,8 +52,10 @@ def step_calculation(num, _max):
     """
     if _max == 63:
         first = '000000'
+        zf = 6
     else:
         first = '000'
+        zf = 3
     # reverse input, and convert to int
     rev = int(num[::-1], 2)
     if rev >= max:
@@ -61,7 +63,7 @@ def step_calculation(num, _max):
     else:
         rev += 1
         # reverse again, and pad
-        out = bin(rev)[2:].zfill(6)[::-1]
+        out = bin(rev)[2:].zfill(zf)[::-1]
     return out
 
 def link_next():
