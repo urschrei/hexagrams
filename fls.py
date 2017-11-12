@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import os
-from flask import Flask, send_file, request, render_template, jsonify, make_response, url_for
+from random import randint
+from flask import Flask, send_file, request, render_template, jsonify, make_response, url_for, redirect
 from functools import wraps
 from hexagram import Hexagram, Trigram
 app = Flask(__name__)
@@ -12,6 +13,7 @@ def json_resp():
     return {
         "hexagram": "/hexagram/nnnnnn.png, where n is 1 (solid bar) or 0 (broken bar). Hexagrams are built bottom to top.",
         "trigram": "/trigram/nnn.png, where n is 1 (solid bar) or 0 (broken bar). Trigrams are built bottom to top.",
+        "random": "call /trigram/random or /hexagram/random to get a random image",
         "digit_order": "Hexagrams and Trigrams are built using digits read from left to right.",
         "links": "See the Link header for full paths.",
         "copyright": "Stephan Hügel, 2016"
@@ -123,6 +125,10 @@ def hex_out(hexagram):
         response.headers[k] = v
     return response
 
+@app.route('/hexagram/random')
+def hex_random():
+    return redirect(url_for(".hex_out", hexagram="{0:b}".format(randint(0, 63)).zfill(6)), code=303)
+
 @app.route('/trigram/<trigram>.png')
 def tri_out(trigram):
     generated = Trigram([int(elem) for elem in trigram])
@@ -130,6 +136,10 @@ def tri_out(trigram):
     for k, v in link_next().items():
         response.headers[k] = v
     return response
+
+@app.route('/trigram/random')
+def tri_random():
+    return redirect(url_for(".tri_out", trigram="{0:b}".format(randint(0, 7)).zfill(3)), code=303)
 
 @app.route('/')
 @firstlink
