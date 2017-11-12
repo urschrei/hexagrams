@@ -21,7 +21,7 @@ class Hexagram(object):
     Write to hexagram_output\hexagram.png by calling .dump(),
     with an optional filename string argument
     
-    """   
+    """
     def __init__(self, pattern, plength=6):
         if len(pattern) != plength:
             raise HexagramException("Pass an iterable of %s digits or booleans" % plength)
@@ -30,14 +30,14 @@ class Hexagram(object):
         # we always want to produce a square hexagram
         self.bar_width = (self.bar_height * 6) + (self.wbar_height * 5)
         self.generated = self.generate(pattern)
-    
+
     def _black_row(self):
         """ an unbroken bar """
         return np.vstack([
             np.zeros((self.bar_height, self.bar_width)),
             np.ones((self.wbar_height, self.bar_width))]
         )
-    
+
     def _broken_row(self):
         """ a broken bar """
         return np.vstack([
@@ -47,7 +47,7 @@ class Hexagram(object):
                 np.zeros((self.bar_height, (self.bar_width / 2) - self.bar_height))]),
             np.ones((self.wbar_height, self.bar_width))]
         )
-    
+
     def trim(self, raw_hexagram):
         """ remove trailing white bar from bottom of hexagram / trigram """
         raw_hexagram[-1] = raw_hexagram[-1][0:self.bar_height]
@@ -66,7 +66,7 @@ class Hexagram(object):
         stacked = np.vstack(container)
         # rescale to 256 x 8-bit (0 = black, 255 = white)
         return (255.0 / stacked.max() * (stacked - stacked.min())).astype(np.uint8)
-    
+
     def dump(self, fname=False):
         """ write hexagram to PNG """
         _fname = (fname or self.__class__.__name__.lower())
