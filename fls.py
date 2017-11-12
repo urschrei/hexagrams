@@ -61,7 +61,7 @@ def step_calculation(num, _max):
         zf = 3
     # reverse input, and convert to int
     rev = int(num[::-1], 2)
-    if rev >= max:
+    if rev >= _max:
         out = first
     else:
         rev += 1

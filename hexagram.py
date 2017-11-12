@@ -9,10 +9,7 @@ import sys
 import json
 import codecs
 from PIL import Image
-if sys.version_info[0] == 2:
-    import StringIO
-else:
-    from io import StringIO
+from io import BytesIO
 import numpy as np
 
 
@@ -46,9 +43,9 @@ class Hexagram(object):
         """ a broken bar """
         return np.vstack([
             np.hstack([
-                np.zeros((self.bar_height, (self.bar_width / 2) - self.bar_height)),
+                np.zeros((self.bar_height, (self.bar_width // 2) - self.bar_height)),
                 np.ones((self.bar_height, self.bar_height * 2)),
-                np.zeros((self.bar_height, (self.bar_width / 2) - self.bar_height))]),
+                np.zeros((self.bar_height, (self.bar_width // 2) - self.bar_height))]),
             np.ones((self.wbar_height, self.bar_width))]
         )
 
@@ -98,7 +95,7 @@ class Hexagram(object):
 
     def dump_image(self):
         """ returns a hexagram as an in-memory file object """
-        img_io = StringIO.StringIO()
+        img_io = BytesIO()
         image = Image.fromarray(self.generated)
         image.save(img_io, 'PNG', quality=100)
         img_io.seek(0)
