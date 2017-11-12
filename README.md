@@ -1,7 +1,7 @@
-[![b](http://cleromancer.herokuapp.com/hexagram/100010.png)](b_hex.png)
-[![d](http://cleromancer.herokuapp.com/trigram/100.png)](d_tri.png)
-[![e](http://cleromancer.herokuapp.com/trigram/010.png)](e_tri.png)
-[![r](http://cleromancer.herokuapp.com/hexagram/random)](random.png)
+[![b](http://cleromancer.herokuapp.com/hexagram/100010.png)](http://cleromancer.herokuapp.com/100010.png)
+[![d](http://cleromancer.herokuapp.com/trigram/100.png)](http://cleromancer.herokuapp.com/trigram/100.png)
+[![e](http://cleromancer.herokuapp.com/trigram/010.png)](http://cleromancer.herokuapp.com/trigram/010.png)
+[![r](http://cleromancer.herokuapp.com/hexagram/random)](http://cleromancer.herokuapp.com/hexagram/random)
 
 # Description
 Procedural generation of I Ching hexagrams using PIL and NumPy.
