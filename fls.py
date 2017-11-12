@@ -71,22 +71,20 @@ def step_calculation(num, _max):
         out = bin(rev)[2:].zfill(zf)[::-1]
     return out
 
-def link_next():
+def link_next(kind, num):
     links = {}
     kwargs = {}
     # if it's a hexagram call
-    if request.view_args.get('hexagram'):
+    if kind == "hexagram":
         first = '000000'
         last = '11111'
         kwargs['hexagram'] = 'dummy'
-        num = request.view_args.get('hexagram')
         _next = step_calculation(num, 63)
     # must be a trigram call
     else:
         first = '000'
         last = '111'
         kwargs['trigram'] = 'dummy'
-        num = request.view_args.get('trigram')
         _next = step_calculation(num, 7)
     # first, next, previous, last
     links["Link"] = '%s' % (
@@ -117,29 +115,41 @@ def firstlink(f):
         return f(*args, **kwargs)
     return decorated_function
 
-@app.route('/hexagram/<hexagram>.png')
-def hex_out(hexagram):
-    generated = Hexagram([int(elem) for elem in hexagram])
-    response = make_response(send_file(generated.dump_image(), mimetype='image/png'))
-    for k, v in link_next().items():
+def hex_response(gen, hexa):
+    """ Build a response for specified and random hexagrams """
+    response = make_response(send_file(gen.dump_image(), mimetype='image/png'))
+    for k, v in link_next("hexagram", hexa).items():
         response.headers[k] = v
     return response
 
+def tri_response(gen, tri):
+    """ Build a response for specified and random trigrams """
+    response = make_response(send_file(gen.dump_image(), mimetype='image/png'))
+    for k, v in link_next("trigram", tri).items():
+        response.headers[k] = v
+    return response
+
+@app.route('/hexagram/<hexagram>.png')
+def hex_out(hexagram):
+    generated = Hexagram([int(elem) for elem in hexagram])
+    return hex_response(generated, hexagram)
+
 @app.route('/hexagram/random')
 def hex_random():
-    return redirect(url_for(".hex_out", hexagram="{0:b}".format(randint(0, 63)).zfill(6)), code=307)
+    random = "{0:b}".format(randint(0, 63)).zfill(6)
+    generated = Hexagram([int(elem) for elem in random])
+    return hex_response(generated, random)
 
 @app.route('/trigram/<trigram>.png')
 def tri_out(trigram):
     generated = Trigram([int(elem) for elem in trigram])
-    response = make_response(send_file(generated.dump_image(), mimetype='image/png'))
-    for k, v in link_next().items():
-        response.headers[k] = v
-    return response
+    return tri_response(generated, trigram)
 
 @app.route('/trigram/random')
 def tri_random():
-    return redirect(url_for(".tri_out", trigram="{0:b}".format(randint(0, 7)).zfill(3)), code=307)
+    random = "{0:b}".format(randint(0, 7)).zfill(3)
+    generated = Trigram([int(elem) for elem in random])
+    return tri_response(generated, random)
 
 @app.route('/')
 @firstlink
