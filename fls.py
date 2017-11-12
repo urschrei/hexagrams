@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import os
 from flask import Flask, send_file, request, render_template, jsonify, make_response, url_for
 from functools import wraps
 from hexagram import Hexagram, Trigram
 app = Flask(__name__)
 with app.app_context():
-    app.config["SERVER_NAME"] = "cleromancer.herokuapp.com"
+    app.config["SERVER_NAME"] = os.environ.get("SERVER_NAME")
 
 def json_resp():
     return {
