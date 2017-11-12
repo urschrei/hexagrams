@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from flask import Flask, send_file, request, render_template, jsonify, make_response, url_for
 import json
 from functools import wraps
