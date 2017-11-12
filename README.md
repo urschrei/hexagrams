@@ -1,4 +1,6 @@
-[![Tui](http://cleromancer.herokuapp.com/hexagram/100100.png)](Tui_hex.png)
+[![b](http://cleromancer.herokuapp.com/hexagram/100010.png)](b_hex.png)
+[![d](http://cleromancer.herokuapp.com/trigram/100.png)](d_tri.png)
+[![e](http://cleromancer.herokuapp.com/trigram/010.png)](e_tri.png)
 
 # Description
 Procedural generation of I Ching hexagrams using PIL and NumPy.
