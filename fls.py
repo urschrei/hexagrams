@@ -115,41 +115,34 @@ def firstlink(f):
         return f(*args, **kwargs)
     return decorated_function
 
-def hex_response(gen, hexa):
-    """ Build a response for specified and random hexagrams """
+def image_response(gen, kind, ideogram):
+    """ Build a response for specified and random tri– and hexagrams """
     response = make_response(send_file(gen.dump_image(), mimetype='image/png'))
-    for k, v in link_next("hexagram", hexa).items():
-        response.headers[k] = v
-    return response
-
-def tri_response(gen, tri):
-    """ Build a response for specified and random trigrams """
-    response = make_response(send_file(gen.dump_image(), mimetype='image/png'))
-    for k, v in link_next("trigram", tri).items():
+    for k, v in link_next(kind, ideogram).items():
         response.headers[k] = v
     return response
 
 @app.route('/hexagram/<hexagram>.png')
 def hex_out(hexagram):
     generated = Hexagram([int(elem) for elem in hexagram])
-    return hex_response(generated, hexagram)
+    return image_response(generated, "hexagram", hexagram)
 
 @app.route('/hexagram/random')
 def hex_random():
     random = "{0:b}".format(randint(0, 63)).zfill(6)
     generated = Hexagram([int(elem) for elem in random])
-    return hex_response(generated, random)
+    return image_response(generated, "hexagram", random)
 
 @app.route('/trigram/<trigram>.png')
 def tri_out(trigram):
     generated = Trigram([int(elem) for elem in trigram])
-    return tri_response(generated, trigram)
+    return image_response(generated, "trigram", trigram)
 
 @app.route('/trigram/random')
 def tri_random():
     random = "{0:b}".format(randint(0, 7)).zfill(3)
     generated = Trigram([int(elem) for elem in random])
-    return tri_response(generated, random)
+    return image_response(generated, "trigram", random)
 
 @app.route('/')
 @firstlink
