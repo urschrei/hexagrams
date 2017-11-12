@@ -16,7 +16,7 @@ A Hexagram is composed from two of the eight trigrams. Its bars are encoded as b
 `1` encodes a solid bar, `0` encodes a broken bar.  
 Pass a 6-digit iterable of `1`/`0` or `True`/`False` to generate the hexagram.  
 
-Call `dump()` to dump it to `hexagram_output\hexagram.png`. Pass an optional string to `dump()` to control the output filename.  
+Call `dump()` to dump it to `hexagram_output/hexagram.png`. Pass an optional string to `dump()` to control the output filename.  
 Call `dump_json()` to dump it to `hexagram.json`. Pass an optional string to `dump_json()` to control the output filename. 
 
 Trigrams can be constructed and dumped in the same way; pass a 3-digit iterable.
