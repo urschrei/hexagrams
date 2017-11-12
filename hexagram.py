@@ -5,7 +5,6 @@
 # License: MIT
 
 import os
-import sys
 import json
 import codecs
 from PIL import Image
