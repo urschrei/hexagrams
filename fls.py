@@ -136,7 +136,7 @@ def tri_out(trigram):
 def index():
     msg  = json_resp()
     if request_wants_json():
-        return jsonify(items=[json.dumps(msg)])
+        return jsonify(items=[msg])
     return render_template('index.html'), 200
 
 @app.errorhandler(404)
