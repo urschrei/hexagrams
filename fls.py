@@ -127,7 +127,7 @@ def hex_out(hexagram):
 
 @app.route('/hexagram/random')
 def hex_random():
-    return redirect(url_for(".hex_out", hexagram="{0:b}".format(randint(0, 63)).zfill(6)), code=303)
+    return redirect(url_for(".hex_out", hexagram="{0:b}".format(randint(0, 63)).zfill(6)), code=307)
 
 @app.route('/trigram/<trigram>.png')
 def tri_out(trigram):
@@ -139,7 +139,7 @@ def tri_out(trigram):
 
 @app.route('/trigram/random')
 def tri_random():
-    return redirect(url_for(".tri_out", trigram="{0:b}".format(randint(0, 7)).zfill(3)), code=303)
+    return redirect(url_for(".tri_out", trigram="{0:b}".format(randint(0, 7)).zfill(3)), code=307)
 
 @app.route('/')
 @firstlink
