@@ -5,10 +5,14 @@
 # License: MIT
 
 import os
+import sys
 import json
 import codecs
 from PIL import Image
-import StringIO
+if sys.version_info[0] == 2:
+    import StringIO
+else:
+    from io import StringIO
 import numpy as np
 
 
