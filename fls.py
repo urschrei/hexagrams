@@ -133,8 +133,8 @@ def tri_out(trigram):
 @app.route('/')
 @firstlink
 def index():
-    msg  = json_resp()
     if request_wants_json():
+        msg  = json_resp()
         return jsonify(items=[msg])
     return render_template('index.html'), 200
 
