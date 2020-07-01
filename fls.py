@@ -2,7 +2,7 @@
 
 import os
 from random import randint
-from flask import Flask, send_file, request, render_template, jsonify, make_response, url_for, redirect
+from flask import Flask, send_file, request, render_template, jsonify, make_response, url_for
 from functools import wraps
 from hexagram import Hexagram, Trigram
 app = Flask(__name__)
