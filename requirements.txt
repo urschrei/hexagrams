@@ -1,5 +1,0 @@
-pillow
-numpy
-flask
-gunicorn
-

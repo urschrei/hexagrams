@@ -10,7 +10,7 @@ Procedural generation of I Ching hexagrams using PIL and NumPy.
 [Trigrams, too](http://cleromancer.herokuapp.com).
 
 # Usage
-First, install [`requirements`](requirements.txt) (PIL and NumPy).  
+Install [uv](https://docs.astral.sh/uv/), then run `uv sync` to install the dependencies (Pillow and NumPy). Run scripts with `uv run`.  
 
 A Hexagram is composed from two of the eight trigrams. Its bars are encoded as binary numbers, **from bottom to top**, using the digits from left to right.  
 `1` encodes a solid bar, `0` encodes a broken bar.  
